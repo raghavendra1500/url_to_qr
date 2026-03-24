@@ -1,64 +1,57 @@
-from flask import Flask, request, render_template, send_file, redirect, url_for
+from flask import Flask, request, render_template, send_file, redirect, url_for, session
 import qrcode
 import io
+import base64
 
 app = Flask(__name__)
-
-qr_bytes = None
-qr_generated_flag = False
+app.secret_key = "qrgen-secret"
 
 
-def generate_qr_bytes(url: str):
+def create_qr(url: str):
     qr = qrcode.make(url)
 
-    img_io = io.BytesIO()
-    qr.save(img_io, 'PNG')
-    img_io.seek(0)
+    buffer = io.BytesIO()
+    qr.save(buffer, format="PNG")
+    buffer.seek(0)
 
-    return img_io.getvalue()   
+    return buffer.read()
+
+
+def to_base64(image_bytes):
+    return base64.b64encode(image_bytes).decode("utf-8")
+
 
 @app.route('/')
 def home():
-    return render_template('index.html', qr_generated=qr_generated_flag)
+    qr_image = session.get("qr_image")
+    return render_template("index.html", qr_image=qr_image)
 
 
 @app.route('/generate', methods=['POST'])
-def generate_qr():
-    global qr_bytes, qr_generated_flag
-
-    url = request.form.get('url')
+def generate():
+    url = request.form.get("url")
 
     if not url:
-        return "URL is required", 400
+        return redirect(url_for("home"))
 
-    qr_bytes = generate_qr_bytes(url)
-    qr_generated_flag = True
+    image_bytes = create_qr(url)
 
-    return redirect(url_for('home'))
+    session["qr_image"] = to_base64(image_bytes)
 
-
-@app.route('/qr-image')
-def qr_image():
-    global qr_bytes
-
-    if qr_bytes is None:
-        return "No QR generated", 404
-
-    return send_file(
-        io.BytesIO(qr_bytes),
-        mimetype='image/png'
-    )
+    return redirect(url_for("home"))
 
 
 @app.route('/download')
-def download_qr():
-    global qr_bytes
+def download():
+    qr_image = session.get("qr_image")
 
-    if qr_bytes is None:
+    if not qr_image:
         return "No QR generated", 404
 
+    image_bytes = base64.b64decode(qr_image)
+
     return send_file(
-        io.BytesIO(qr_bytes),
+        io.BytesIO(image_bytes),
         mimetype='image/png',
         as_attachment=True,
         download_name="qr_code.png"
@@ -67,11 +60,9 @@ def download_qr():
 
 @app.route('/reset')
 def reset():
-    global qr_bytes, qr_generated_flag
-    qr_bytes = None
-    qr_generated_flag = False
-    return redirect(url_for('home'))
+    session.pop("qr_image", None)
+    return redirect(url_for("home"))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
