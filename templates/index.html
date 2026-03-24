@@ -5,14 +5,14 @@
 <title>QRGen Pro</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
     * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: 'Inter', sans-serif;
+        font-family: Inter, sans-serif;
     }
 
     body {
@@ -20,201 +20,205 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background: radial-gradient(circle at top, #1a1a2e, #0f0f1a);
+        background: radial-gradient(circle at top, #0f172a, #020617);
+        overflow: hidden;
         color: white;
-        padding: 20px;
+    }
+
+    /* animated background glow */
+    .bg-glow {
+        position: absolute;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, rgba(0,150,255,0.25), transparent 70%);
+        top: -200px;
+        left: -200px;
+        filter: blur(60px);
+        animation: move 8s infinite alternate;
+    }
+
+    @keyframes move {
+        0% { transform: translate(0,0); }
+        100% { transform: translate(200px,150px); }
     }
 
     .container {
+        position: relative;
         width: 100%;
-        max-width: 900px;
-        text-align: center;
+        max-width: 950px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        padding: 40px;
+        z-index: 2;
     }
 
-    /* HERO */
+    /* LEFT PANEL */
+    .left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
     .title {
         font-size: 3rem;
         font-weight: 700;
-        background: linear-gradient(90deg, #00c6ff, #0072ff);
+        background: linear-gradient(90deg, #3b82f6, #06b6d4);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
     .subtitle {
         margin-top: 10px;
-        color: #b0b0b0;
-        font-size: 1.1rem;
+        color: #94a3b8;
+        font-size: 1rem;
     }
 
-    /* CARD */
+    /* INPUT CARD */
     .card {
-        margin-top: 40px;
+        margin-top: 20px;
         background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.08);
         backdrop-filter: blur(20px);
-        border: 1px solid rgba(255,255,255,0.1);
-        padding: 30px;
-        border-radius: 18px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        display: inline-block;
-        width: 100%;
-        max-width: 450px;
+        padding: 20px;
+        border-radius: 16px;
     }
 
     input {
         width: 100%;
         padding: 14px;
         border-radius: 12px;
-        border: 1px solid rgba(255,255,255,0.2);
-        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(255,255,255,0.03);
         color: white;
         outline: none;
-        margin-bottom: 15px;
     }
 
-    input::placeholder {
-        color: #aaa;
+    input:focus {
+        border-color: #38bdf8;
     }
 
-    .btn {
+    button {
         width: 100%;
+        margin-top: 12px;
         padding: 14px;
         border: none;
         border-radius: 12px;
-        cursor: pointer;
+        background: linear-gradient(90deg, #3b82f6, #06b6d4);
+        color: white;
         font-weight: 600;
+        cursor: pointer;
         transition: 0.3s;
     }
 
-    .generate {
-        background: linear-gradient(90deg, #00c6ff, #0072ff);
-        color: white;
-    }
-
-    .generate:hover {
+    button:hover {
         transform: translateY(-2px);
     }
 
-    /* QR */
+    /* RIGHT PANEL */
+    .right {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .qr-box {
-        margin-top: 20px;
+        width: 100%;
+        max-width: 350px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.08);
+        backdrop-filter: blur(20px);
+        border-radius: 18px;
+        padding: 25px;
+        text-align: center;
+        animation: fade 0.6s ease;
+    }
+
+    @keyframes fade {
+        from { opacity: 0; transform: scale(0.95); }
+        to { opacity: 1; transform: scale(1); }
     }
 
     .qr-box img {
         width: 220px;
         border-radius: 12px;
         margin-top: 10px;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.4);
     }
 
-    /* ACTIONS */
     .actions {
         margin-top: 15px;
         display: flex;
         gap: 10px;
     }
 
-    .download {
+    .btn {
         flex: 1;
-        background: linear-gradient(90deg, #28a745, #20c997);
-        color: white;
-        border-radius: 12px;
-        padding: 12px;
+        padding: 10px;
+        border-radius: 10px;
         text-decoration: none;
+        text-align: center;
         font-weight: 600;
-        display: inline-block;
-    }
-
-    .reset {
-        flex: 1;
-        background: linear-gradient(90deg, #ff416c, #ff4b2b);
-        color: white;
-        border-radius: 12px;
-        padding: 12px;
-        text-decoration: none;
-        font-weight: 600;
-        display: inline-block;
-    }
-
-    /* FEATURES */
-    .features {
-        margin-top: 50px;
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 20px;
-    }
-
-    .feature {
-        background: rgba(255,255,255,0.05);
-        padding: 20px;
-        border-radius: 14px;
-        border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .feature h3 {
-        margin-bottom: 10px;
-    }
-
-    .feature p {
-        color: #aaa;
         font-size: 14px;
     }
 
-    footer {
-        margin-top: 40px;
-        color: #777;
-        font-size: 13px;
+    .download {
+        background: #22c55e;
+        color: white;
     }
+
+    .reset {
+        background: #ef4444;
+        color: white;
+    }
+
+    .empty {
+        color: #64748b;
+        font-size: 14px;
+    }
+
 </style>
 </head>
 
 <body>
 
+<div class="bg-glow"></div>
+
 <div class="container">
 
-    <!-- HERO -->
-    <h1 class="title">QRGen Pro</h1>
-    <p class="subtitle">Create stunning QR codes instantly with a modern experience</p>
+    <!-- LEFT -->
+    <div class="left">
+        <h1 class="title">QRGen Pro</h1>
+        <p class="subtitle">A modern QR generator built for speed, simplicity, and production-grade UX.</p>
 
-    <!-- CARD -->
-    <div class="card">
-        <form method="POST" action="/generate">
-            <input type="text" name="url" placeholder="Paste your URL here..." required>
-            <button class="btn generate" type="submit">Generate QR Code</button>
-        </form>
+        <div class="card">
+            <form method="POST" action="/generate">
+                <input type="text" name="url" placeholder="Paste your link here..." required>
+                <button type="submit">Generate QR Code</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right">
 
         {% if qr_image %}
         <div class="qr-box">
-            <img src="data:image/png;base64,{{ qr_image }}" alt="QR Code">
+            <h3>Generated QR</h3>
+            <img src="data:image/png;base64,{{ qr_image }}" alt="QR">
 
             <div class="actions">
-                <a href="/download" class="download">Download</a>
-                <a href="/reset" class="reset">Reset</a>
+                <a class="btn download" href="/download">Download</a>
+                <a class="btn reset" href="/reset">Reset</a>
             </div>
         </div>
+
+        {% else %}
+        <div class="qr-box">
+            <p class="empty">Your QR will appear here after generation</p>
+        </div>
         {% endif %}
+
     </div>
-
-    <!-- FEATURES -->
-    <div class="features">
-        <div class="feature">
-            <h3>⚡ Instant</h3>
-            <p>Generate QR codes in under a second.</p>
-        </div>
-
-        <div class="feature">
-            <h3>🔒 Secure</h3>
-            <p>No database, no tracking, fully private.</p>
-        </div>
-
-        <div class="feature">
-            <h3>📥 Export</h3>
-            <p>Download high-quality QR images instantly.</p>
-        </div>
-    </div>
-
-    <footer>
-        Built with Flask • Designed for speed & simplicity
-    </footer>
 
 </div>
 
