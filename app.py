@@ -4,20 +4,18 @@ import io
 
 app = Flask(__name__)
 
-# Store only the last generated QR in memory (still simple, but safer)
-qr_img = None
+qr_bytes = None
 qr_generated_flag = False
 
 
-def generate_qr_image(url: str):
+def generate_qr_bytes(url: str):
     qr = qrcode.make(url)
 
     img_io = io.BytesIO()
     qr.save(img_io, 'PNG')
     img_io.seek(0)
 
-    return img_io
-
+    return img_io.getvalue()   
 
 @app.route('/')
 def home():
@@ -26,14 +24,14 @@ def home():
 
 @app.route('/generate', methods=['POST'])
 def generate_qr():
-    global qr_img, qr_generated_flag
+    global qr_bytes, qr_generated_flag
 
     url = request.form.get('url')
 
     if not url:
         return "URL is required", 400
 
-    qr_img = generate_qr_image(url)
+    qr_bytes = generate_qr_bytes(url)
     qr_generated_flag = True
 
     return redirect(url_for('home'))
@@ -41,26 +39,26 @@ def generate_qr():
 
 @app.route('/qr-image')
 def qr_image():
-    global qr_img
+    global qr_bytes
 
-    if qr_img is None:
+    if qr_bytes is None:
         return "No QR generated", 404
 
-    qr_img.seek(0)
-    return send_file(qr_img, mimetype='image/png')
+    return send_file(
+        io.BytesIO(qr_bytes),
+        mimetype='image/png'
+    )
 
 
 @app.route('/download')
 def download_qr():
-    global qr_img
+    global qr_bytes
 
-    if qr_img is None:
+    if qr_bytes is None:
         return "No QR generated", 404
 
-    qr_img.seek(0)
-
     return send_file(
-        qr_img,
+        io.BytesIO(qr_bytes),
         mimetype='image/png',
         as_attachment=True,
         download_name="qr_code.png"
@@ -69,8 +67,8 @@ def download_qr():
 
 @app.route('/reset')
 def reset():
-    global qr_img, qr_generated_flag
-    qr_img = None
+    global qr_bytes, qr_generated_flag
+    qr_bytes = None
     qr_generated_flag = False
     return redirect(url_for('home'))
 
