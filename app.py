@@ -25,7 +25,7 @@ def generate_qr():
     qr_img = img_io
     qr_generated_flag = True
 
-    return redirect(url_for('home'))  # 🔥 important
+    return redirect(url_for('home'))  
 
 @app.route('/qr-image')
 def qr_image():
