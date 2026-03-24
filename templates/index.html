@@ -1,133 +1,229 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>QRGen - Smart QR Code Generator</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>QRGen — Generate QR Codes Instantly</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
 
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: #f8f9fc;
-        }
+    body {
+        background: #ffffff;
+        color: #111;
+    }
 
-        .hero {
-            padding: 80px 20px;
-            text-align: center;
-        }
+    .container {
+        max-width: 1100px;
+        margin: auto;
+        padding: 40px 20px;
+    }
 
-        .hero h1 {
-            font-weight: 600;
-            font-size: 2.5rem;
-        }
+    /* NAVBAR */
+    .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 60px;
+    }
 
-        .hero p {
-            color: #6c757d;
-            margin-bottom: 30px;
-        }
+    .logo {
+        font-weight: 600;
+        font-size: 18px;
+    }
 
-        .card {
-            border-radius: 15px;
-        }
+    .nav a {
+        text-decoration: none;
+        color: #555;
+        margin-left: 20px;
+        font-size: 14px;
+    }
 
-        .features {
-            padding: 60px 20px;
-        }
+    /* HERO */
+    .hero {
+        text-align: center;
+        margin-bottom: 60px;
+    }
 
-        .feature-box {
-            padding: 20px;
-        }
+    .hero h1 {
+        font-size: 3rem;
+        font-weight: 600;
+        line-height: 1.2;
+    }
 
-        .qr-img {
-            max-width: 220px;
-            margin-top: 20px;
-        }
+    .hero p {
+        color: #666;
+        margin-top: 15px;
+        font-size: 1.1rem;
+    }
 
-        footer {
-            padding: 20px;
-            text-align: center;
-            color: gray;
-        }
-    </style>
+    /* CARD */
+    .card {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 16px;
+        padding: 30px;
+        max-width: 420px;
+        margin: auto;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        text-align: center;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #000;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        background: #111;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #000;
+    }
+
+    .qr-img {
+        margin-top: 20px;
+        width: 200px;
+    }
+
+    .actions {
+        margin-top: 15px;
+    }
+
+    .actions a {
+        display: inline-block;
+        margin: 5px;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 14px;
+        text-decoration: none;
+    }
+
+    .download {
+        background: #111;
+        color: white;
+    }
+
+    .reset {
+        border: 1px solid #ddd;
+        color: #333;
+    }
+
+    /* FEATURES */
+    .features {
+        margin-top: 80px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 30px;
+    }
+
+    .feature {
+        padding: 20px;
+    }
+
+    .feature h4 {
+        margin-bottom: 10px;
+    }
+
+    .feature p {
+        color: #666;
+        font-size: 14px;
+    }
+
+    /* FOOTER */
+    .footer {
+        text-align: center;
+        margin-top: 80px;
+        color: #aaa;
+        font-size: 14px;
+    }
+
+</style>
 </head>
 <body>
 
-<!-- HERO SECTION -->
-<section class="hero">
-    <h1>⚡ Generate QR Codes Instantly</h1>
-    <p>Create high-quality QR codes for URLs in seconds. Fast, simple, and free.</p>
-</section>
+<div class="container">
 
-<!-- GENERATOR CARD -->
-<div class="container d-flex justify-content-center">
-    <div class="card shadow p-4 text-center" style="width: 420px;">
+    <!-- NAV -->
+    <div class="nav">
+        <div class="logo">QRGen</div>
+        <div>
+            <a href="#">Product</a>
+            <a href="#">About</a>
+        </div>
+    </div>
 
+    <!-- HERO -->
+    <div class="hero">
+        <h1>Create QR Codes<br>in Seconds</h1>
+        <p>Fast, minimal, and beautifully simple QR code generator.</p>
+    </div>
+
+    <!-- GENERATOR -->
+    <div class="card">
         <form method="POST" action="/generate">
-            <input 
-                type="text" 
-                name="url" 
-                class="form-control mb-3" 
-                placeholder="Enter your URL here..." 
-                required
-            >
-
-            <button type="submit" class="btn btn-dark w-100">
-                Generate QR Code
-            </button>
+            <input type="text" name="url" placeholder="Paste your URL..." required>
+            <button type="submit">Generate QR</button>
         </form>
 
         {% if qr_generated %}
-            <img src="{{ url_for('qr_image') }}" class="qr-img" alt="QR Code">
+            <img src="{{ url_for('qr_image') }}" class="qr-img">
 
-            <div class="mt-3">
-                <a href="{{ url_for('download_qr') }}" class="btn btn-success">
-                    Download
-                </a>
-
-                <a href="/" class="btn btn-outline-secondary">
-                    Reset
-                </a>
+            <div class="actions">
+                <a href="{{ url_for('download_qr') }}" class="download">Download</a>
+                <a href="/" class="reset">Reset</a>
             </div>
         {% endif %}
-
     </div>
-</div>
 
-<!-- FEATURES -->
-<section class="features text-center">
-    <div class="container">
-        <h3 class="mb-4">Why Use QRGen?</h3>
+    <!-- FEATURES -->
+    <div class="features">
+        <div class="feature">
+            <h4>⚡ Instant</h4>
+            <p>Generate QR codes in real time with zero delay.</p>
+        </div>
 
-        <div class="row">
-            <div class="col-md-4 feature-box">
-                <h5>⚡ Instant Generation</h5>
-                <p>Create QR codes in real-time with no delays.</p>
-            </div>
+        <div class="feature">
+            <h4>🔒 Private</h4>
+            <p>No tracking. No storage. Your data stays yours.</p>
+        </div>
 
-            <div class="col-md-4 feature-box">
-                <h5>📥 Easy Download</h5>
-                <p>Download high-quality PNG QR codes instantly.</p>
-            </div>
-
-            <div class="col-md-4 feature-box">
-                <h5>🔒 Secure & Private</h5>
-                <p>Your data is not stored anywhere.</p>
-            </div>
+        <div class="feature">
+            <h4>📥 Download</h4>
+            <p>Export high-quality QR codes instantly.</p>
         </div>
     </div>
-</section>
 
-<!-- FOOTER -->
-<footer>
-    <p>© 2026 QRGen | Built with Python & Flask</p>
-</footer>
+    <!-- FOOTER -->
+    <div class="footer">
+        © 2026 QRGen — Built with Flask
+    </div>
+
+</div>
 
 </body>
 </html>
