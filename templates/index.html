@@ -191,7 +191,9 @@
             <img src="{{ url_for('qr_image') }}" class="qr-img">
 
             <div class="actions">
-                <a href="{{ url_for('download_qr') }}" class="download">Download</a>
+                <a href="{{ url_for('download_qr', url=qr_url) }}" class="download">
+                Download
+                  </a>
                 <a href="/reset" class="reset">Reset</a>
             </div>
         {% endif %}
