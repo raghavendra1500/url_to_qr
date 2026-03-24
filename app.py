@@ -37,12 +37,23 @@ def qr_image():
 
 @app.route('/download')
 def download_qr():
-    global qr_img
-    if qr_img:
-        qr_img.seek(0)
-        return send_file(qr_img, mimetype='image/png', as_attachment=True, download_name="qr_code.png")
-    return "No QR generated"
+    url = request.args.get('url')
 
+    if not url:
+        return "No URL provided"
+
+    qr = qrcode.make(url)
+
+    img_io = io.BytesIO()
+    qr.save(img_io, 'PNG')
+    img_io.seek(0)
+
+    return send_file(
+        img_io,
+        mimetype='image/png',
+        as_attachment=True,
+        download_name="qr_code.png"
+    )
 @app.route('/reset')
 def reset():
     global qr_generated_flag
