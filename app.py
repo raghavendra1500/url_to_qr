@@ -52,15 +52,15 @@ def qr_image():
 
 @app.route('/download')
 def download_qr():
-    url = request.args.get('url')
+    global qr_img
 
-    if not url:
-        return "No URL provided", 400
+    if qr_img is None:
+        return "No QR generated", 404
 
-    img_io = generate_qr_image(url)
+    qr_img.seek(0)
 
     return send_file(
-        img_io,
+        qr_img,
         mimetype='image/png',
         as_attachment=True,
         download_name="qr_code.png"
